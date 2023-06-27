@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const app = express();
+require('dotenv').config();
 
 app.set('view engine', 'ejs');
 
@@ -13,6 +14,15 @@ app.use(express.json());
 
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: true }));
+
+// Access environment variables
+const mongodb_username = process.env.MONGODB_USERNAME;
+const mongodb_psw = process.env.MONGODB_PSW;
+const dbURI = `mongodb+srv://${mongodb_username}:${mongodb_psw}@rxlink.ire4kcg.mongodb.net/?retryWrites=true&w=majority`
+
+// Use the environment variables in your code
+console.log(dbURI);
+
 
 
 app.get('/login', (req,res) => {
