@@ -35,6 +35,10 @@ app.get('/login', (req,res) => {
     res.render('login', { javascriptFile: '/login.js' });
 });
 
+app.get('/pharmacy/registration', (req,res) => {
+    res.render('registration-pharmacy', { javascriptFile: '/registration-pharmacy.js' });
+});
+
 app.post('/account/login', (req, res) => {
     email = req.body.email;
     password = req.body.password;
