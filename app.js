@@ -46,18 +46,34 @@ app.get('/patient/registration', (req,res) => {
 
 app.post('/account/login', (req, res) => {
     email = req.body.email;
-    password = req.body.password;
+    pt_password_attempt = req.body.password;
     isPharmacy = req.body.isPharmacy;
 
-    const saltRounds = 10;
-    bcrypt.hash(password, saltRounds, (err, hash) => {
+    var model;
+
+    if (isPharmacy) model = Pharmacy;
+    else model = Patient;
+    
+    model.find({ email: email }).then((documents, err) => {
         if (err) {
-            console.error('Error hashing password:', err);
             res.statusCode = 500;
-            res.send();
+            res.json({ error: 'RETRIEVAL_ERROR' });
+        } else {
+            if (documents.length == 0) {
+                res.statusCode = 500;
+                res.json({ error: 'USER_NOT_FOUND' });
+            }
+            if (documents.length > 1) {
+                res.statusCode = 500;
+                res.json({ error: 'MULTIPLE_ACCOUNTS_FOUND' });
+            } else {
+                user = documents[0];
+                correct_psw_hash = user.password;
+                bcrypt.compare(pt_password_attempt, correct_psw_hash, function(err, result) {
+                    res.json({result})
+                });
+            }
         }
-        console.log(hash);
-        res.send();
     });
 });
 
