@@ -14,7 +14,7 @@ const patientSchema = new Schema({
         type: String,
         required: true
     },
-    dob: long
+    dob: Date
 }, {timestamps: true});
 
 const Patient = mongoose.model('Patient', patientSchema);

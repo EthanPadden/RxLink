@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const app = express();
 const mongoose = require('mongoose');
 const Pharmacy = require('./models/pharmacy');
-const e = require('express');
+const Patient = require('./models/patient');
 
 require('dotenv').config();
 
@@ -95,7 +95,7 @@ app.post('/account/pharmacy/register',  (req, res) => {
                         res.statusCode = 500;
                         res.json({ error: 'HASH' });
                     } else {
-                        // Create a new modul object
+                        // Create a new model object
                         const pharmacy = new Pharmacy({
                             email: email,
                             name: name,
@@ -122,6 +122,51 @@ app.post('/account/pharmacy/register',  (req, res) => {
             }
         }
     });
+});
 
-    
+app.post('/account/patient/register',  (req, res) => {
+    email = req.body.email;
+    pt_password = req.body.password;
+    name = req.body.name;
+
+    // Is there already a pharmacy with this email?
+    Patient.findOne({ email: email }).then((document, err) => {
+        if (err) {
+            res.statusCode = 500;
+            res.json({ error: 'REGISTRATION_DB_ERROR' });
+        } else {
+            if (document == null) {
+                const saltRounds = 10;
+                bcrypt.hash(pt_password, saltRounds, (err, hash) => {
+                    if (err) {
+                        res.statusCode = 500;
+                        res.json({ error: 'HASH' });
+                    } else {
+                        // Create a new model object
+                        const patient = new Patient({
+                            email: email,
+                            name: name,
+                            password: hash,
+                        });
+                        // Save to DB
+                        patient
+                            .save()
+                            .then((result) => {
+                                // OK
+                                res.json({ result });
+                            })
+                            .catch((err) => {
+                                // Error
+                                res.statusCode = 500;
+                                console.log(err);
+                                res.json({ error: 'ERROR_SAVING_TO_DB' });
+                            });
+                    }
+                });
+            } else {
+                res.statusCode = 500;
+                res.json({ error: 'USER_ALREADY_EXISTS' });
+            }
+        }
+    });
 });
