@@ -27,4 +27,11 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#btn-register-pharmacy').click(() => {
+        window.location.href = '/pharmacy/registration';
+    })
+    $('#btn-register-patient').click(() => {
+        window.location.href = '/patient/registration';
+    })
 });
