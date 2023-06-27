@@ -9,22 +9,40 @@ $(document).ready(function() {
     $('#btn-submit').click(function(event){
         event.preventDefault();
 
-        var email = $('#ip-login-email').val();
-        var password = $('#ip-login-psw').val();
-        var name = $('#ip-login-name').val();
+        var email = $('#ip-registration-patient-email').val();
+        var password = $('#ip-registration-patient-psw').val();
+        var name = $('#ip-registration-patient-name').val();
    
-        $.ajax({
-            type: 'POST',
-            url: '/account/patient/register',
-            data: {
-                email, password, name
-            },
-            success: function(data, textStatus, jqXHR){
-                console.log(jqXHR.status);
-            },
-            error: function(errMsg) {
-                console.log(errMsg);
-            }
-        });
+        if (email == null || email == undefined || email.length == 0)
+            $('#reg-msg').text('Please enter an email');
+        else if (
+            password == null ||
+            password == undefined ||
+            password.length == 0
+        )
+            $('#reg-msg').text('Please enter a password');
+        else if (name == null || name == undefined || name.length == 0)
+            $('#reg-msg').text('Please enter a name');
+        else {
+            $.ajax({
+                type: 'POST',
+                url: '/account/patient/register',
+                data: {
+                    email, password, name
+                },
+                success: function (data, textStatus, jqXHR) {
+                    if (jqXHR.status == 200) {
+                        console.log(data.name)
+                        $('#reg-msg').text('Logged in as: ' + data.result.name);
+                    } else {
+                        $('#reg-msg').text('Error: ' + data.error);
+                    }
+                },
+                error: function (errMsg) {
+                    $('#reg-msg').text('Error: ' + errMsg.responseJSON.error);
+                },
+            });
+        }
+        
     });
 });

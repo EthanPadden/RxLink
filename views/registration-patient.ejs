@@ -27,22 +27,25 @@
     <div class="row">
       <div class="col"></div>
       <div class="col">
-        <form id="form-login" class="container-center">
+        <div class="container-center">
+        <form id="form-login">
           <h1>Register Patient</h1>
           <div class="mb-3">
-            <label for="ip-registration-pharmacy-email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="ip-registration-pharmacy-email" aria-describedby="emailHelp">
+            <label for="ip-registration-patient-email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="ip-registration-patient-email" aria-describedby="emailHelp">
           </div>
           <div class="mb-3">
-            <label for="ip-registration-pharmacy-psw" class="form-label">Password</label>
-            <input type="password" class="form-control" id="ip-registration-pharmacy-psw">
+            <label for="ip-registration-patient-psw" class="form-label">Password</label>
+            <input type="password" class="form-control" id="ip-registration-patient-psw">
           </div>
           <div class="mb-3">
-            <label for="ip-registration-pharmacy-name" class="form-label">Name</label>
-            <input type="password" class="form-control" id="ip-registration-pharmacy-name">
+            <label for="ip-registration-patient-name" class="form-label">Name</label>
+            <input type="password" class="form-control" id="ip-registration-patient-name">
           </div>
           <button id="btn-submit" type="submit" class="btn btn-primary">Submit</button>
         </form>
+        <div id="reg-msg"></div>
+        </div>
       </div>
       <div class="col">
         <button id="btn-register-pharmacy" class="btn btn-primary">Register Pharmacy</button>
