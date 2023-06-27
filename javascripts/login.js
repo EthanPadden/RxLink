@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     $('#btn-submit').click(function(event){
         event.preventDefault();
@@ -11,5 +12,19 @@ $(document).ready(function() {
         console.log('Email:', email);
         console.log('Password:', password);
         console.log('Pharmacy?:', isPharmacy);
+   
+        $.ajax({
+            type: 'POST',
+            url: '/account/login',
+            data: {
+                email, password, isPharmacy
+            },
+            success: function(data, textStatus, jqXHR){
+                console.log(jqXHR.status);
+            },
+            error: function(errMsg) {
+                console.log(errMsg);
+            }
+        });
     });
 });
