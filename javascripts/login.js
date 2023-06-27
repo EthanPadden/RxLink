@@ -21,9 +21,14 @@ $(document).ready(function() {
             },
             success: function(data, textStatus, jqXHR){
                 console.log(jqXHR.status);
+                if(jqXHR.status == 200) {
+                    $('#login-msg').text('Logged in as: ' + data.name)
+                } else {
+                    $('#login-msg').text('Error: ' + data.error)   
+                }
             },
             error: function(errMsg) {
-                console.log(errMsg);
+                $('#login-msg').text('Error: ' + errMsg.responseJSON.error)   
             }
         });
     });

@@ -59,18 +59,26 @@ app.post('/account/login', (req, res) => {
             res.statusCode = 500;
             res.json({ error: 'RETRIEVAL_ERROR' });
         } else {
-            if (documents.length == 0) {
+            if (documents.length == 0 || documents == undefined || documents == null) {
                 res.statusCode = 500;
                 res.json({ error: 'USER_NOT_FOUND' });
             }
-            if (documents.length > 1) {
+            else if (documents.length > 1) {
                 res.statusCode = 500;
                 res.json({ error: 'MULTIPLE_ACCOUNTS_FOUND' });
             } else {
                 user = documents[0];
+                console.log(documents)
+                console.log(documents.length)
                 correct_psw_hash = user.password;
                 bcrypt.compare(pt_password_attempt, correct_psw_hash, function(err, result) {
-                    res.json({result})
+                    if(result == true) {
+                        res.json(document);
+                    }
+                    else {
+                        res.statusCode = 500;
+                        res.json({error: 'WRONG_PASSWORD'});
+                    }
                 });
             }
         }
