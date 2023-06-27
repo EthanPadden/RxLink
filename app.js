@@ -78,35 +78,50 @@ app.post('/account/login', (req, res) => {
 });
 
 app.post('/account/pharmacy/register',  (req, res) => {
-    // Get the information from the request body
     email = req.body.email;
-    name = req.body.name;
     pt_password = req.body.password;
-    console.log(req.body);
+    name = req.body.name;
 
-    const saltRounds = 10;
-    bcrypt.hash(pt_password, saltRounds, (err, hash) => {
+    // Is there already a pharmacy with this email?
+    Pharmacy.findOne({ email: email }).then((document, err) => {
         if (err) {
             res.statusCode = 500;
-            res.json({error:'HASH'});
+            res.json({ error: 'REGISTRATION_DB_ERROR' });
         } else {
-            // Create a new modul object
-            const pharmacy = new Pharmacy({
-                email: email,
-                name: name,
-                password: hash
-            });
-            // Save to DB
-            pharmacy.save()
-            .then((result) => {
-                // OK
-                res.json({result});
-            })
-            .catch((err) => {
-                // Error
+            if (document == null) {
+                const saltRounds = 10;
+                bcrypt.hash(pt_password, saltRounds, (err, hash) => {
+                    if (err) {
+                        res.statusCode = 500;
+                        res.json({ error: 'HASH' });
+                    } else {
+                        // Create a new modul object
+                        const pharmacy = new Pharmacy({
+                            email: email,
+                            name: name,
+                            password: hash,
+                        });
+                        // Save to DB
+                        pharmacy
+                            .save()
+                            .then((result) => {
+                                // OK
+                                res.json({ result });
+                            })
+                            .catch((err) => {
+                                // Error
+                                res.statusCode = 500;
+                                console.log(err);
+                                res.json({ error: 'ERROR_SAVING_TO_DB' });
+                            });
+                    }
+                });
+            } else {
                 res.statusCode = 500;
-                res.json({error:'DB'});
-            });
+                res.json({ error: 'USER_ALREADY_EXISTS' });
+            }
         }
     });
+
+    
 });
