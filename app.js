@@ -29,7 +29,9 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true})
 })
 .catch((err) => {console.log(err)});
 
-
+app.get('/', (req,res) => {
+    res.render('home', { javascriptFile: '/home.js' });
+});
 
 app.get('/login', (req,res) => {
     res.render('login', { javascriptFile: '/login.js' });
@@ -73,7 +75,8 @@ app.post('/account/login', (req, res) => {
                 correct_psw_hash = user.password;
                 bcrypt.compare(pt_password_attempt, correct_psw_hash, function(err, result) {
                     if(result == true) {
-                        res.json(document);
+                        res.cookie('userId',user._id);
+                        res.json(user);
                     }
                     else {
                         res.statusCode = 500;
@@ -83,6 +86,11 @@ app.post('/account/login', (req, res) => {
             }
         }
     });
+});
+
+app.get('/logout', (req, res) => {
+    res.clearCookie('userId')
+    res.send();
 });
 
 app.post('/account/pharmacy/register',  (req, res) => {
@@ -114,6 +122,7 @@ app.post('/account/pharmacy/register',  (req, res) => {
                             .save()
                             .then((result) => {
                                 // OK
+                                res.cookie('userId',result._id);
                                 res.json({ result });
                             })
                             .catch((err) => {
@@ -160,7 +169,7 @@ app.post('/account/patient/register',  (req, res) => {
                         patient
                             .save()
                             .then((result) => {
-                                // OK
+                                res.cookie('userId',result._id);
                                 res.json({ result });
                             })
                             .catch((err) => {

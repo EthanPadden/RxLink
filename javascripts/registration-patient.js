@@ -32,8 +32,7 @@ $(document).ready(function() {
                 },
                 success: function (data, textStatus, jqXHR) {
                     if (jqXHR.status == 200) {
-                        console.log(data.name)
-                        $('#reg-msg').text('Logged in as: ' + data.result.name);
+                        window.location.href = '/home';
                     } else {
                         $('#reg-msg').text('Error: ' + data.error);
                     }
