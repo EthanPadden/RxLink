@@ -53,8 +53,17 @@ app.post('/account/login', (req, res) => {
 
     var model;
 
-    if (isPharmacy) model = Pharmacy;
-    else model = Patient;
+    if (isPharmacy === 'true') {
+        console.log(isPharmacy + ' => pharmacy')
+        model = Pharmacy;
+    }
+    else {
+        console.log(isPharmacy + ' => patient')
+        model = Patient;
+    }
+
+    console.log(isPharmacy)
+    console.log(model)
     
     model.find({ email: email }).then((documents, err) => {
         if (err) {
@@ -70,8 +79,6 @@ app.post('/account/login', (req, res) => {
                 res.json({ error: 'MULTIPLE_ACCOUNTS_FOUND' });
             } else {
                 user = documents[0];
-                console.log(documents)
-                console.log(documents.length)
                 correct_psw_hash = user.password;
                 bcrypt.compare(pt_password_attempt, correct_psw_hash, function(err, result) {
                     if(result == true) {
